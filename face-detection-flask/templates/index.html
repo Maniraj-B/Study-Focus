@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Activity Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+                background: linear-gradient(180deg, #000 66.02%, #1DB5BE 220.74%);
+                color: white;
+          
+        }
+        img {
+            border: 5px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        .timer {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+    </style>
+    
+</head>
+<body>
+    <h1>Face Activity Detection</h1>
+    <img src="/video_feed" alt="Video Feed">
+    
+    <div class="timer">
+        <p>Distraction Timer: <span id="distraction-timer">0</span> seconds</p>
+        <p>Total Distraction Time: <span id="total-distraction">0</span> seconds</p>
+    </div>
+    
+
+    <script>
+        function updateTimer() {
+            fetch('/distraction_timer')
+                .then(response => response.json())
+                .then(data => {
+                    // Update distraction timer
+                    document.getElementById('distraction-timer').textContent = data.distraction_timer;
+                    // Update total distraction time
+                    document.getElementById('total-distraction').textContent = data.total_distraction_time;
+                })
+                .catch(error => console.log(error));
+        }
+    
+        // Call the function every second
+        setInterval(updateTimer, 1000);
+    </script>
+    
+<button id="stopBtn">Stop Session</button>
+
+<script>
+    document.getElementById('stopBtn').addEventListener('click', function() {
+        fetch('/stop_session')
+            .then(response => response.json())
+            .then(data => {
+                // Redirect to main.html to display statistics
+                window.location.href = '/main';
+            });
+    });
+</script>
+
+</body>
+</html>
